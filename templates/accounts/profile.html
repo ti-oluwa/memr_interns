@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'core//styles//form_card.css' %}">
+<link rel="stylesheet" href="{% static 'accounts//styles//profile.css' %}">
+{% endblock styles %}
+
+{% block page_title %}{{ account.full_name }}{% endblock page_title %}
+
+
+{% block content %}
+<main class="container">
+    <section class="profile-detail">
+        <div class="form-card">
+            <div class="form-header">
+                <h2>Update Profile</h2>
+                <p>
+                    Edit your profile details below.
+                </p>
+            </div>
+    
+            <!-- Profile Update Form -->
+            <form action="{% url 'accounts:profile_update' %}" id="profile-update-form">
+                {% csrf_token %}
+    
+                <div class="form-fields"> 
+                    <div class="form-field">
+                        <label for="first_name">First name</label>
+                        <input 
+                            type="text" 
+                            id="first_name" 
+                            name="first_name" 
+                            class="form-input" 
+                            placeholder="Firstname"
+                            required
+                            autofocus
+                            value="{{ account.first_name }}"
+                            title="Enter your first name."
+                        >
+                        <small class="field-message"></small>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="last_name">Last name</label>
+                        <input 
+                            type="text" 
+                            id="last_name" 
+                            name="last_name" 
+                            class="form-input" 
+                            placeholder="Last name"
+                            required
+                            value="{{ account.last_name }}"
+                            title="Enter your last name"
+                        >
+                        <small class="field-message"></small>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="other_name">Other name(s)</label>
+                        <input 
+                            type="text" 
+                            id="other_name" 
+                            name="other_name" 
+                            class="form-input" 
+                            placeholder="Other name(s) (optional)"
+                            value="{{ account.other_name|default_if_none:'' }}"
+                            title="Enter your other name(s)"
+                        >
+                        <small class="field-message"></small>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="phone1">Phone number</label>
+                        <input 
+                            type="text" 
+                            id="phone1" 
+                            name="phone1" 
+                            class="form-input" 
+                            placeholder="Phone number"
+                            required
+                            value="{{ account.phone1 }}"
+                            title="Enter your phone number."
+                        >
+                        <small class="field-message"></small>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="phone2">Alternative Phone number</label>
+                        <input 
+                            type="text" 
+                            id="phone2" 
+                            name="phone2" 
+                            class="form-input" 
+                            placeholder="Alternative phone number (optional)"
+                            minlength="8" 
+                            value="{{ account.phone2|default_if_none:'' }}"
+                            title="Enter an alternative phone number"
+                        >
+                        <small class="field-message"></small>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="date_of_birth">Date of Birth</label>
+                        <input 
+                            type="date" 
+                            id="date_of_birth" 
+                            name="date_of_birth" 
+                            class="form-input" 
+                            placeholder="Last name"
+                            required
+                            title="Enter your date of birth"
+                            value="{{ account.date_of_birth|date:'Y-m-d'|default_if_none:'' }}"
+                        >
+                        <small class="field-message"></small>
+                    </div>    
+                </div>
+    
+                <div class="submit-btn-wrapper">
+                    <button class="btn-primary submit-btn" type="submit">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+{% endblock content %}
+
+
+{% block scripts %}
+<script src="{% static 'core//scripts//formCard.js' %}"></script>
+<script src="{% static 'accounts//scripts//updateProfile.js' %}"></script>
+{% endblock scripts %}

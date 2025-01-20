@@ -1,0 +1,231 @@
+.card-container {
+    margin-top: 20px;
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-card {
+    width: 100%;
+    max-width: 400px;
+    height: max-content;
+    border-radius: 4px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+    background: transparent;
+    position: relative;
+}
+
+.form-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    z-index: -1;
+    backdrop-filter: blur(4px);
+    background-attachment: fixed;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Modal Variant */
+.form-card.form-card-modal {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    z-index: 10000;
+    isolation: isolate;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1),
+        0px 0px 0px 100vmax rgba(0, 0, 0, 0.5);
+}
+
+.form-card-modal {
+    max-height: calc(100vh - 8%);
+    overflow-y: auto;
+}
+
+#main:has(.form-card-modal.show-block) {
+    overflow: hidden !important;
+}
+
+.form-card>.form-header {
+    justify-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px 0;
+    padding: 16px;
+}
+
+.form-header>h2 {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    font-family: 'Raleway';
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-light);
+
+}
+
+.form-header>p {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--text-light);
+
+}
+
+.form-header>.form-close-btn {
+    align-self: flex-end;
+    padding: 4px 8px;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-close-btn:hover {
+    color: var(--jasper);
+    background: var(--parchment);
+}
+
+.form-card form {
+    justify-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px 0;
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.form-card form::-webkit-scrollbar {
+    display: none;
+}
+
+form .form-fields {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.form-fields .form-field {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px 0;
+}
+
+.form-field label {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--text-light);
+}
+
+.form-field .field-message {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.6;
+    display: none;
+    color: red;
+}
+
+.form-field:has(.invalid-field) .field-message {
+    display: block;
+}
+
+.form-field .form-input {
+    width: 100%;
+    display: block;
+    border: none;
+    padding: 6px 8px;
+    border-radius: 2px;
+}
+
+.form-input::placeholder {
+    font-size: 14px;
+    font-weight: 400;
+    color: #999;
+}
+
+.form-field .form-select {
+    width: 100%;
+    display: block;
+    outline: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0 !important;
+}
+
+.form-field .form-file {
+    display: none;
+}
+
+.form-field:has(.form-file) label {
+    width: 100%;
+    text-align: center;
+    background: var(--bluish-gray);
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-overflow: ellipsis;
+}
+
+.form-field.required-field label::after {
+    content: " *";
+    color: red;
+}
+
+form .submit-btn-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px;
+}
+
+.submit-btn-wrapper>.submit-btn {
+    width: 100%;
+    font-size: clamp(12px, 2.5vw, 18px);
+}
+
+.form-card .form-footer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px 0;
+}
+
+.form-footer>.footer-item {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--text-light);
+
+}
+
+.form-footer>.footer-item>a {
+    color: var(--text-light);
+
+}
+
+.form-footer>.footer-item>a:hover {
+    color: var(--jasper);
+}

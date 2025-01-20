@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'core//styles//form_card.css' %}">
+<link rel="stylesheet" href="{% static 'accounts//styles//auth_page.css' %}">
+
+<link rel="stylesheet" href="{% static 'accounts//styles//registration.css' %}">
+{% endblock styles %}
+
+
+{% block page_title %}Register{% endblock page_title %}
+
+{% block content %}
+<div class="container">
+    <main>
+        <section id="main-text">
+            <h1>{{ app_alias }}</h1>
+            <p>
+                Register as an intern at the Ministry of Energy and Mineral Resources.
+            </p>
+        </section>
+
+        <section id="form-wrapper">
+            <div class="form-card show-block">
+                <div class="form-header">
+                    <h2>Registration</h2>
+                    <p>
+                        To commence registration, please provide a valid email.
+                    </p>
+                </div>
+
+                <!-- Email Verification Form Section -->
+                <form action="{% url 'accounts:email_verification_initiation' %}?check_unique=true" id="email-verification-form">
+                    {% csrf_token %}
+
+                    <div class="form-fields">    
+                        <div class="form-field">
+                            <label for="email" hidden>Email Address</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                class="form-input"
+                                placeholder="Email address" 
+                                autocomplete="email"
+                                required
+                                title="Enter your email address"
+                            >
+                            <small class="field-message"></small>
+                        </div>
+                    </div>
+
+                    <div class="submit-btn-wrapper">
+                        <button class="btn-primary submit-btn" type="submit">
+                            Proceed
+                        </button>
+                    </div>
+
+                    <div class="form-footer">
+                        <small class="footer-item">
+                            Already registered?
+                            <a href="{% url 'accounts:signin' %}">Sign in</a>
+                        </small>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-card">
+                <div class="form-header">
+                    <h2>Enter OTP</h2>
+                    <p>
+                        Enter the one time password sent to your mail.
+                    </p>
+                </div>
+
+                <!-- Email OTP Verification Form Section -->
+                <form action="{% url 'accounts:email_verification_completion' %}" id="otp-verification-form">
+                    {% csrf_token %}
+
+                    <div class="form-fields">
+                        <div class="form-field">
+                            <label for="otp" hidden></label>
+                            <input 
+                                type="text" 
+                                id="otp" 
+                                name="otp" 
+                                class="form-input otp-input"
+                                autocomplete="on"
+                                required
+                                autofocus
+                                step="null"
+                                pattern="^[0-9]{4,}$"
+                            >
+                            <small class="field-message"></small>
+                        </div>
+                    </div>
+
+                    <div class="submit-btn-wrapper">
+                        <button class="btn-primary submit-btn" type="submit">
+                            Verify
+                        </button>
+                    </div>
+
+                    <div class="form-footer">
+                        <small class="footer-item">
+                            Didn't receive OTP vai mail? Check your spam folder. If OTP isn't in spam, refresh this page and try again.
+                        </small>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-card">
+                <div class="form-header">
+                    <h2>Complete Registration</h2>
+                    <p>
+                        Enter your details to complete your registration.
+                    </p>
+                </div>
+
+                <!-- Registration Completion Form -->
+                <form action="{% url 'accounts:registration' %}" id="registration-completion-form">
+                    {% csrf_token %}
+
+                    <div class="form-fields"> 
+                        <div class="form-field">
+                            <label for="first_name">First name</label>
+                            <input 
+                                type="text" 
+                                id="first_name" 
+                                name="first_name" 
+                                class="form-input" 
+                                placeholder="Firstname"
+                                required
+                                autofocus
+                                title="Enter your first name."
+                            >
+                            <small class="field-message"></small>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="last_name">Last name</label>
+                            <input 
+                                type="text" 
+                                id="last_name" 
+                                name="last_name" 
+                                class="form-input" 
+                                placeholder="Last name"
+                                required
+                                title="Enter your last name"
+                            >
+                            <small class="field-message"></small>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="other_name">Other name(s)</label>
+                            <input 
+                                type="text" 
+                                id="other_name" 
+                                name="other_name" 
+                                class="form-input" 
+                                placeholder="Other name(s) (optional)"
+                                title="Enter your other name(s)"
+                            >
+                            <small class="field-message"></small>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="phone1">Phone number</label>
+                            <input 
+                                type="text" 
+                                id="phone1" 
+                                name="phone1" 
+                                class="form-input" 
+                                placeholder="Phone number"
+                                required
+                                title="Enter your phone number."
+                            >
+                            <small class="field-message"></small>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="phone2">Alternative Phone number</label>
+                            <input 
+                                type="text" 
+                                id="phone2" 
+                                name="phone2" 
+                                class="form-input" 
+                                placeholder="Alternative phone number (optional)"
+                                minlength="8" 
+                                title="Enter an alternative phone number."
+                            >
+                            <small class="field-message"></small>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="date_of_birth">Date of Birth</label>
+                            <input 
+                                type="date" 
+                                id="date_of_birth" 
+                                name="date_of_birth" 
+                                class="form-input" 
+                                placeholder="Last name"
+                                required
+                                title="Enter your date of birth"
+                            >
+                            <small class="field-message"></small>
+                        </div>    
+
+                        <div class="form-field">
+                            <label for="password">Password</label>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                class="form-input" 
+                                placeholder="Password"
+                                minlength="8" 
+                                required
+                                autofocus
+                                title="Enter a password of at least 8 characters"
+                            >
+                            <small class="field-message"></small>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="confirm_password">Confirm Password</label>
+                            <input 
+                                type="password" 
+                                id="confirm_password" 
+                                name="confirm_password" 
+                                class="form-input"
+                                placeholder="Confirm password" 
+                                minlength="8" 
+                                required
+                                title="Re-enter your password"
+                            >
+                            <small class="field-message"></small>
+                        </div>
+                    </div>
+
+                    <div class="submit-btn-wrapper">
+                        <button class="btn-primary submit-btn" type="submit">
+                            Register
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+</div>
+{% endblock content %}
+
+
+{% block scripts %}
+<script src="{% static 'core//scripts//formCard.js' %}"></script>
+<script src="{% static 'accounts//scripts//registration.js' %}"></script>
+{% endblock scripts %}
+

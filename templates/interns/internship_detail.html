@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'core//styles//form_card.css' %}">
+<link rel="stylesheet" href="{% static 'interns//styles//internship_detail.css' %}">
+{% endblock styles %}
+
+{% block page_title %}{{ internship.display_label }}{% endblock page_title %}
+
+
+{% block content %}
+<main class="container">
+    <section class="internship-detail">
+        <div class="form-card">
+            <div class="form-header">
+                <h2>{{ internship.display_label }}</h2>
+                <p>
+                    Below are the existing details of your internship. You can update as needed.
+                </p>
+            </div>
+    
+            <!-- Internship Update Form -->
+            <form action="{% url 'interns:update_internship' internship.pk %}" id="internship-update-form">
+                {% csrf_token %}
+    
+                <div class="form-fields"> 
+                    <div class="form-field">
+                        <label for="internship_type">Internship Type</label>
+                        <select 
+                            id="internship_type" 
+                            name="internship_type" 
+                            class="form-input form-select" 
+                            required
+                            autofocus
+                            title="Select the type of internship"
+                        >
+                        {% for internship_type in internship_types %}
+                            <option 
+                                value="{{ internship_type.value }}"
+                                {% if internship_type.value == internship.internship_type %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ internship_type.label }}
+                            </option>
+                        {% endfor %}
+                        </select>
+                        <small class="field-message"></small>
+                    </div>
+    
+                    <div class="form-field">
+                        <label for="department">Department</label>
+                        <select 
+                            id="department" 
+                            name="department" 
+                            class="form-input form-select" 
+                            required
+                            title="Select the department you are interning in"
+                            value="{{ internship.department }}"
+                        >
+                        {% for department in departments %}
+                            <option 
+                                value="{{ department.value }}"
+                                {% if department.value == internship.department %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ department.label }}
+                            </option>
+                        {% endfor %}
+                        </select>
+                        <small class="field-message"></small>
+                    </div>
+    
+                    <div class="form-field">
+                        <label for="start_date">Internship Start Date</label>
+                        <input 
+                            type="date" 
+                            id="start_date" 
+                            name="start_date" 
+                            class="form-input" 
+                            required
+                            value="{{ internship.start_date|date:'Y-m-d' }}"
+                            title="What is the date of commencement of your internship?"
+                        >
+                        <small class="field-message"></small>
+                    </div>
+    
+                    <div class="form-field">
+                        <label for="duration">Internship Duration (in days)</label>
+                        <input 
+                            type="number" 
+                            id="duration" 
+                            name="duration" 
+                            class="form-input" 
+                            placeholder="Duration in days"
+                            required
+                            min="1"
+                            value="{{ internship.duration.days }}"
+                            title="What is the duration of your internship?"
+                        >
+                        <small class="field-message"></small>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="end_date">Internship End Date</label>
+                        <input 
+                            type="date" 
+                            id="end_date" 
+                            name="end_date" 
+                            class="form-input" 
+                            value="{{ internship.end_date|date:'Y-m-d' }}"
+                            title="What is the anticipated date of completion of your internship?"
+                        >
+                        <small class="field-message"></small>
+                    </div>
+                </div>
+    
+                <div class="submit-btn-wrapper">
+                    <button class="btn-primary submit-btn" type="submit">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+{% endblock content %}
+
+
+{% block scripts %}
+<script src="{% static 'core//scripts//formCard.js' %}"></script>
+<script src="{% static 'interns//scripts//updateInternship.js' %}"></script>
+{% endblock scripts %}

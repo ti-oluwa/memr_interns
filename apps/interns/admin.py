@@ -176,7 +176,7 @@ class InternshipModelAdmin(UnfoldModelAdmin):
         return super().get_queryset(request).select_related("account").with_ongoing()
 
     def has_module_permission(self, request):
-        return request.user.is_superuser
+        return request.user.is_staff
 
     def has_view_permission(self, request, obj: Internship = None):
         return request.user.is_staff

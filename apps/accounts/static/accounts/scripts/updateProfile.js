@@ -6,7 +6,8 @@ const profileUpdateButton = profileUpdateForm.querySelector('.submit-btn');
 
 addOnPostAndOnResponseFuncAttr(profileUpdateButton, 'Saving changes...');
 
-const MAX_FILE_SIZE = 200 * 1024;
+const MAX_FILE_SIZE = 100 * 1024;
+
 
 profileUpdateForm.onsubmit = (e) => {
     e.stopImmediatePropagation();
@@ -15,6 +16,8 @@ profileUpdateForm.onsubmit = (e) => {
     if (!validateFileSize(imageField, MAX_FILE_SIZE)) return;
 
     const formData = new FormData(profileUpdateForm);
+    formData.append("timezone", getClientTimezone());
+
     profileUpdateButton.onPost();
     
     const options = {

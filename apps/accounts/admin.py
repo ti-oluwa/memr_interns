@@ -56,6 +56,7 @@ class UserAccountModelAdmin(UnfoldModelAdmin):
     ]
     date_hierarchy = "date_joined"
     save_as = False
+    list_display_links = ["full_name", "email"]
 
     def save_model(self, request, obj, form, change):
         # If password is set, then set it using the set_password method

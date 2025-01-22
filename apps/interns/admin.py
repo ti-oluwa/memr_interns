@@ -127,6 +127,7 @@ class InternshipModelAdmin(UnfoldModelAdmin):
         "end_date",
         "expected_end_date",
     ]
+    list_display_links = ["__str__"]
     list_editable = [
         "internship_type",
         "department",

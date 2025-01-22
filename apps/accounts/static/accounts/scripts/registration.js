@@ -18,7 +18,7 @@ addOnPostAndOnResponseFuncAttr(registrationCompletionButton, 'Please wait...');
 
 const REGISTRATION_EVENT = "registration";
 
-const MAX_FILE_SIZE = 200 * 1024;
+const MAX_FILE_SIZE = 100 * 1024;
 
 
 function showRegistrationCompletionForm(completionData) {

@@ -28,7 +28,7 @@ class EmailVerificationCompletionForm(forms.Form):
     verification_token = forms.CharField(required=True, widget=forms.HiddenInput)
 
 
-max_size_200KB = max_file_size_validator_factory(200)
+max_size_100KB = max_file_size_validator_factory(100)
 
 
 class AccountCreationForm(forms.Form):
@@ -41,7 +41,7 @@ class AccountCreationForm(forms.Form):
     phone2 = PhoneNumberFormField(required=False)
     date_of_birth = forms.DateField(required=False)
     image = forms.ImageField(
-        allow_empty_file=False, required=True, validators=[max_size_200KB]
+        allow_empty_file=False, required=True, validators=[max_size_100KB]
     )
     password = forms.CharField(
         widget=forms.PasswordInput, required=True, validators=[validate_password]
@@ -90,5 +90,5 @@ class ProfileUpdateForm(forms.Form):
     date_of_birth = forms.DateField(required=False)
     timezone = TimeZoneFormField(required=False)
     image = forms.ImageField(
-        allow_empty_file=False, required=True, validators=[max_size_200KB]
+        allow_empty_file=False, required=True, validators=[max_size_100KB]
     )

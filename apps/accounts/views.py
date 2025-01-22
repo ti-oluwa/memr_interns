@@ -63,7 +63,7 @@ class SignInView(generic.TemplateView):
         password = form.cleaned_data["password"]
         user_account = authenticate(
             self.request,
-            username=email,
+            username=email.lower(),
             password=password,
         )
 
@@ -125,7 +125,7 @@ class EmailVerificationInitiationView(generic.View):
         )
 
     def form_valid(self, form):
-        email = form.cleaned_data["email"]
+        email = form.cleaned_data["email"].lower()
         query_params = parse_query_params_from_request(self.request)
         check_unique = query_params.get("check_unique", False)
         check_exists = query_params.get("check_exists", False)

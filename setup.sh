@@ -1,6 +1,6 @@
 #!/bin/bash
 
-git submodule --init
+git submodule update --init --recursive
 pip install poetry
 poetry install --no-root
 python manage.py collectstatic --noinput

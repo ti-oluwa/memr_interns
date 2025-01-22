@@ -15,7 +15,7 @@ addOnPostAndOnResponseFuncAttr(emailVerificationButton, 'Verifying...');
 addOnPostAndOnResponseFuncAttr(OTPVerificationButton, 'Verifying OTP...');
 addOnPostAndOnResponseFuncAttr(passwordResetCompletionButton, 'Please wait...');
 
-PASSWORD_RESET_EVENT = "password_reset";
+const PASSWORD_RESET_EVENT = "password_reset";
 
 
 function showPasswordResetCompletionForm(completionData) {

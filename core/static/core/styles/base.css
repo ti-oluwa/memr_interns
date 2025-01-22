@@ -84,6 +84,16 @@ header > nav > #logo > a > img{
     text-decoration: underline;
 }
 
+#nav-links > ul > li > .profile-image{
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-position: center;
+    object-fit: contain;
+    border: 0.7px solid var(--light-gray);
+    background: var(--light-gray);
+}
+
 nav > #dropdown-btn{
     width: 36px;
     display: none;

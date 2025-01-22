@@ -1,4 +1,5 @@
 import typing
+import functools
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
@@ -8,11 +9,18 @@ from phonenumber_field.modelfields import PhoneNumberField
 from uuid_extensions import uuid7
 
 from .managers import UserAccountManager
+from helpers.django.utils.uploads import make_upload_directory_for_user
 
 
 class AccountType(models.TextChoices):
     INTERN = "intern", _("Intern")
     STAFF = "staff", _("Staff")
+
+
+def image_directory(instance, filename) -> str:
+    return functools.partial(
+        make_upload_directory_for_user("id"), parent_dir="images"
+    )(instance, filename)
 
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
@@ -29,8 +37,9 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
         unique=True, db_index=True, verbose_name=_("Email address")
     )
     phone1 = PhoneNumberField(unique=True, verbose_name=_("Phone number 1"))
-    date_of_birth = models.DateField(blank=True, null=True)
     phone2 = PhoneNumberField(blank=True, null=True, verbose_name=_("Phone number 2"))
+    date_of_birth = models.DateField(blank=True, null=True)
+    image = models.ImageField(blank=False, null=True, upload_to=image_directory)
     timezone = TimeZoneField(default="UTC", blank=True, null=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)

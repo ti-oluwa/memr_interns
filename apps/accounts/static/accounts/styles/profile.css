@@ -34,3 +34,11 @@ main > .profile-detail{
     gap: 20px;
     flex: auto;
 }
+
+.profile-detail .profile-image{
+    max-width: 80%;
+    max-height: 500px;
+    object-fit: contain;
+    object-position: center;
+    align-self: center;
+}

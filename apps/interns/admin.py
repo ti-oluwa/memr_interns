@@ -4,6 +4,10 @@ from django.contrib import admin as django_admin
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from imagekit.admin import AdminThumbnail
+from imagekit import ImageSpec
+from imagekit.processors import ResizeToFill
+from imagekit.cachefiles import ImageCacheFile
 from unfold.admin import ModelAdmin as UnfoldModelAdmin
 from unfold.decorators import action as unfold_action, display as unfold_display
 
@@ -91,11 +95,28 @@ def generate_search_help_text(search_fields: list[str]) -> str:
     return f"Search by {', '.join(fields[:-1])} or {fields[-1]}"
 
 
+class AdminThumbnailSpec(ImageSpec):
+    # processors = [ResizeToFill(100, 100)]
+    format = "JPEG"
+    options = {"quality": 60}
+
+
+def cached_admin_thumb(instance: Internship):
+    if not instance.image:
+        return None
+
+    cached = ImageCacheFile(AdminThumbnailSpec(instance.image))
+    # only generates the first time, subsequent calls use cache
+    cached.generate()
+    return cached
+
+
 @django_admin.register(Internship)
 class InternshipModelAdmin(UnfoldModelAdmin):
     """Custom Internship model admin."""
 
     list_display = [
+        "image_preview",
         "__str__",
         "internship_type",
         "in_session",
@@ -171,6 +192,8 @@ class InternshipModelAdmin(UnfoldModelAdmin):
     #################
     # CUSTOM FIELDS #
     #################
+    image_preview = AdminThumbnail(image_field=cached_admin_thumb)
+    image_preview = unfold_display(description=_("Intern Image"))(image_preview)
 
     @unfold_display(
         description=_("Expected End Date"),

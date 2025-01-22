@@ -181,7 +181,7 @@ form .form-fields {
 .form-field:has(.form-file) label {
     width: 100%;
     text-align: center;
-    background: var(--bluish-gray);
+    background: var(--dark-gray);
     padding: 10px 16px;
     border-radius: 4px;
     cursor: pointer;

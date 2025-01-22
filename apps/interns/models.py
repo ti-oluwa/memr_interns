@@ -65,6 +65,10 @@ class Internship(models.Model):
     @property
     def display_label(self) -> str:
         return f"{InternshipType(self.internship_type).label} Internship in the {Departments(self.department).label}"
+    
+    @property
+    def image(self):
+        return self.account.image
 
     def get_expected_end_date(self) -> datetime.date:
         """Returns the expected end date of an internship"""

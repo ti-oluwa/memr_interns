@@ -158,3 +158,16 @@ function underScoreObjectKeys(obj){
 };
 
 
+/**
+ * Gets the size of a file in bytes.
+ * @param {File} file The file object.
+ * @returns {number} The size of the file in bytes.
+ * @throws {TypeError} If the provided argument is not a File object.
+ */
+function getFileSizeInBytes(file) {
+    if (!(file instanceof File)) {
+        throw new TypeError("Expected a File object.");
+    }
+    return file.size;
+}
+

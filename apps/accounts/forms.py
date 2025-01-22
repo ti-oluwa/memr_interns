@@ -4,6 +4,8 @@ from django.contrib.auth.password_validation import validate_password
 from phonenumber_field.formfields import PhoneNumberField as PhoneNumberFormField
 from timezone_field.forms import TimeZoneFormField
 
+from helpers.django.validators import max_file_size_validator_factory
+
 
 class SignInForm(forms.Form):
     """Form for user sign in"""
@@ -26,6 +28,9 @@ class EmailVerificationCompletionForm(forms.Form):
     verification_token = forms.CharField(required=True, widget=forms.HiddenInput)
 
 
+max_size_200KB = max_file_size_validator_factory(200)
+
+
 class AccountCreationForm(forms.Form):
     email_token = forms.CharField(required=True, widget=forms.HiddenInput)
     token_event = forms.CharField(required=True, widget=forms.HiddenInput)
@@ -35,6 +40,9 @@ class AccountCreationForm(forms.Form):
     phone1 = PhoneNumberFormField(required=True)
     phone2 = PhoneNumberFormField(required=False)
     date_of_birth = forms.DateField(required=False)
+    image = forms.ImageField(
+        allow_empty_file=False, required=True, validators=[max_size_200KB]
+    )
     password = forms.CharField(
         widget=forms.PasswordInput, required=True, validators=[validate_password]
     )
@@ -73,7 +81,7 @@ class PasswordResetForm(forms.Form):
 
 class ProfileUpdateForm(forms.Form):
     """Form for updating user profile"""
-    
+
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
     other_name = forms.CharField(required=False)
@@ -81,3 +89,6 @@ class ProfileUpdateForm(forms.Form):
     phone2 = PhoneNumberFormField(required=False)
     date_of_birth = forms.DateField(required=False)
     timezone = TimeZoneFormField(required=False)
+    image = forms.ImageField(
+        allow_empty_file=False, required=True, validators=[max_size_200KB]
+    )

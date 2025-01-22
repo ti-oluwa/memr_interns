@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "unfold.contrib.import_export",  # optional, if django-import-export package is used
     "unfold.contrib.guardian",  # optional, if django-guardian package is used
     "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
+    "imagekit",
     
     "django.contrib.admin",
     "django.contrib.auth",
@@ -117,13 +118,15 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-# STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = BASE_DIR / "static/"
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, r"core/static"),
+    BASE_DIR / "core/static",
 ]
+
+MEDIA_URL = "media/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

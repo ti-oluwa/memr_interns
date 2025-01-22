@@ -6,6 +6,7 @@ const OTPVerificationForm = document.querySelector("#otp-verification-form");
 const OTPVerificationButton = OTPVerificationForm.querySelector(".submit-btn");
 
 const registrationCompletionForm = document.querySelector("#registration-completion-form");
+const imageField = registrationCompletionForm.querySelector('#image');
 const passwordField1 = registrationCompletionForm.querySelector('#password');
 const passwordField2 = registrationCompletionForm.querySelector('#confirm_password');
 const registrationCompletionButton = registrationCompletionForm.querySelector(".submit-btn");
@@ -15,32 +16,33 @@ addOnPostAndOnResponseFuncAttr(emailVerificationButton, 'Please wait...');
 addOnPostAndOnResponseFuncAttr(OTPVerificationButton, 'Verifying OTP...');
 addOnPostAndOnResponseFuncAttr(registrationCompletionButton, 'Please wait...');
 
-REGISTRATION_EVENT = "registration";
+const REGISTRATION_EVENT = "registration";
+
+const MAX_FILE_SIZE = 200 * 1024;
+
 
 function showRegistrationCompletionForm(completionData) {
     registrationCompletionForm.onsubmit = (e) => {
         e.stopImmediatePropagation();
         e.preventDefault();
 
+        if (!validateFileSize(imageField, MAX_FILE_SIZE)) return;
         if (!validatePassword(passwordField1, passwordField2)) return;
 
         const formData = new FormData(registrationCompletionForm);
-        const payload = {};
-        for (const [key, value] of formData.entries()) {
-            payload[key] = value;
-        }
-        payload["timezone"] = getClientTimezone();
+        formData.append("timezone", getClientTimezone());
+        formData.append('email_token', completionData["token"]);
+        formData.append('token_event', REGISTRATION_EVENT);
 
         registrationCompletionButton.onPost();
 
         const options = {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken'),
             },
             mode: 'same-origin',
-            body: JSON.stringify({ ...payload, email_token: completionData["token"], token_event: REGISTRATION_EVENT, }),
+            body: formData,
         }
 
         fetch(registrationCompletionForm.action, options).then((response) => {

@@ -100,6 +100,21 @@
                         <small class="field-message"></small>
                     </div>
 
+                    <img class="profile-image" src="{{ account.image.url }}" alt="{{ account.full_name }}">
+                    <div class="form-field">
+                        <label for="image">Passport</label>
+                        <input 
+                            type="file" 
+                            id="image" 
+                            name="image" 
+                            class="form-input form-file" 
+                            placeholder="Upload Passport (Max 200KB)"
+                            title="Upload your passport image"
+                            accept=".jpg,.jpeg,.png,.webp"
+                        >
+                        <small class="field-message"></small>
+                    </div>
+
                     <div class="form-field">
                         <label for="date_of_birth">Date of Birth</label>
                         <input 

@@ -1,31 +1,29 @@
 
 const profileUpdateForm = document.querySelector('#profile-update-form');
+const imageField = profileUpdateForm.querySelector('#image');
 const profileUpdateButton = profileUpdateForm.querySelector('.submit-btn');
 
 
 addOnPostAndOnResponseFuncAttr(profileUpdateButton, 'Saving changes...');
 
+const MAX_FILE_SIZE = 200 * 1024;
 
 profileUpdateForm.onsubmit = (e) => {
     e.stopImmediatePropagation();
     e.preventDefault();
 
+    if (!validateFileSize(imageField, MAX_FILE_SIZE)) return;
+
     const formData = new FormData(profileUpdateForm);
-    const data = {};
-    for (const [key, value] of formData.entries()) {
-        data[key] = value;
-    }
-
     profileUpdateButton.onPost();
-
+    
     const options = {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
             'X-CSRFToken': getCookie('csrftoken'),
         },
         mode: 'same-origin',
-        body: JSON.stringify(data),
+        body: formData,
     }
 
     fetch(profileUpdateForm.action, options).then((response) => {

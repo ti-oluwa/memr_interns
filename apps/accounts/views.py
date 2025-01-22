@@ -201,8 +201,7 @@ class AccountCreationView(generic.TemplateView):
     http_method_names = ["get", "post"]
 
     def post(self, request, *args, **kwargs):
-        data = json.loads(request.body)
-        form = self.form_class(data)
+        form = self.form_class(data=request.POST, files=request.FILES)
         if form.is_valid():
             return self.form_valid(form)
         return self.form_invalid(form)
@@ -311,8 +310,7 @@ class AccountProfileUpdateView(LoginRequiredMixin, generic.View):
     form_class = ProfileUpdateForm
 
     def post(self, request, *args, **kwargs):
-        data = json.loads(request.body)
-        form = self.form_class(data)
+        form = self.form_class(data=request.POST, files=request.FILES)
         if form.is_valid():
             return self.form_valid(form)
         return self.form_invalid(form)
@@ -328,6 +326,8 @@ class AccountProfileUpdateView(LoginRequiredMixin, generic.View):
         user_account = self.request.user
 
         for key, value in form_data.items():
+            if key == "image" and not value:
+                continue
             setattr(user_account, key, value)
         user_account.save(update_fields=list(form_data.keys()))
         return response.success(

@@ -200,3 +200,15 @@ function showFormCardOnly(formCard) {
         }
     });
 };
+
+
+function validateFileSize(fileField, maxSizeInBytes) {
+    if (fileField.files && fileField.files.length > 0) {
+        const fileSize = getFileSizeInBytes(fileField.files[0]);
+        if (fileSize > maxSizeInBytes) {
+            formFieldHasError(fileField.parentElement, `File size must not exceed ${maxSizeInBytes / 1024}KB`);
+            return false;
+        };
+    };
+    return true;
+};

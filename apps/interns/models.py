@@ -28,6 +28,7 @@ class Departments(models.TextChoices):
     ACCOUNTS = "accounts", _("Accounts Department")
     PUBLIC_RELATIONS = "public_relations", _("Public Relations Unit")
     PS_OFFICE = "ps_office", _("Permanent Secretary's Office")
+    DREDGING_UNIT = "dredging_unit", _("Dredging Unit")
 
 
 class Internship(models.Model):

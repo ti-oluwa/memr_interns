@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load tz %}
 
 {% block styles %}
 <link rel="stylesheet" href="{% static 'core//styles//form_card.css' %}">
@@ -126,6 +127,7 @@
                             required
                             title="Enter your date of birth"
                             value="{{ account.date_of_birth|date:'Y-m-d'|default_if_none:'' }}"
+                            max="{% now 'Y-m-d' %}"
                         >
                         <small class="field-message"></small>
                     </div>    

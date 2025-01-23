@@ -1,5 +1,6 @@
 from django import forms
 from django.conf import settings
+from django.utils import timezone
 from django.contrib.auth.password_validation import validate_password
 from phonenumber_field.formfields import PhoneNumberField as PhoneNumberFormField
 from timezone_field.forms import TimeZoneFormField
@@ -31,6 +32,15 @@ class EmailVerificationCompletionForm(forms.Form):
 max_size_100KB = max_file_size_validator_factory(100)
 
 
+def validate_date_of_birth(date_of_birth):
+    if date_of_birth:
+        if date_of_birth.year < 1900:
+            raise forms.ValidationError(["Date of birth cannot be earlier than 1900"])
+        if (timezone.now().date() - date_of_birth) < timezone.timedelta(days=365 * 16):
+            raise forms.ValidationError(["You must be at least 16 years old."])
+    return date_of_birth
+
+
 class AccountCreationForm(forms.Form):
     email_token = forms.CharField(required=True, widget=forms.HiddenInput)
     token_event = forms.CharField(required=True, widget=forms.HiddenInput)
@@ -39,7 +49,7 @@ class AccountCreationForm(forms.Form):
     other_name = forms.CharField(required=False)
     phone1 = PhoneNumberFormField(required=True)
     phone2 = PhoneNumberFormField(required=False)
-    date_of_birth = forms.DateField(required=False)
+    date_of_birth = forms.DateField(required=False, validators=[validate_date_of_birth])
     image = forms.ImageField(
         allow_empty_file=False, required=True, validators=[max_size_100KB]
     )
@@ -87,7 +97,7 @@ class ProfileUpdateForm(forms.Form):
     other_name = forms.CharField(required=False)
     phone1 = PhoneNumberFormField(required=True)
     phone2 = PhoneNumberFormField(required=False)
-    date_of_birth = forms.DateField(required=False)
+    date_of_birth = forms.DateField(required=False, validators=[validate_date_of_birth])
     timezone = TimeZoneFormField(required=False)
     image = forms.ImageField(
         allow_empty_file=False, required=False, validators=[max_size_100KB]

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load tz %}
 
 {% block styles %}
 <link rel="stylesheet" href="{% static 'core//styles//form_card.css' %}">
@@ -203,6 +204,7 @@
                                 placeholder="Last name"
                                 required
                                 title="Enter your date of birth"
+                                max="{% now 'Y-m-d'%}"
                             >
                             <small class="field-message"></small>
                         </div>

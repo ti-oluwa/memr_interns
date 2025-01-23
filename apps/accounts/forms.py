@@ -90,5 +90,5 @@ class ProfileUpdateForm(forms.Form):
     date_of_birth = forms.DateField(required=False)
     timezone = TimeZoneFormField(required=False)
     image = forms.ImageField(
-        allow_empty_file=False, required=True, validators=[max_size_100KB]
+        allow_empty_file=False, required=False, validators=[max_size_100KB]
     )

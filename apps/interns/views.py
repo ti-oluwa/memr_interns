@@ -12,7 +12,7 @@ from helpers.django.exceptions import capture
 from helpers.django.response import shortcuts as response
 
 
-class InternDashboardView(InternOnlyMixin, LoginRequiredMixin, generic.TemplateView):
+class InternDashboardView(LoginRequiredMixin, generic.TemplateView):
     """View for the intern dashboard"""
 
     template_name = "interns/dashboard.html"
@@ -25,6 +25,11 @@ class InternDashboardView(InternOnlyMixin, LoginRequiredMixin, generic.TemplateV
         context_data["internship_types"] = InternshipType
         context_data["departments"] = Departments
         return context_data
+
+    def get(self, request, *args, **kwargs):
+        if self.request.user.is_staff:
+            return redirect("admin:index")
+        return super().get(request, *args, **kwargs)
 
 
 class InternshipDetailView(InternOnlyMixin, LoginRequiredMixin, generic.DetailView):
@@ -121,7 +126,9 @@ class InternshipUpdateView(InternOnlyMixin, LoginRequiredMixin, generic.View):
             account=internship.account,
             start_date=internship.start_date,
             end_date=internship.end_date,
-            exclude_pks=[internship.pk,],
+            exclude_pks=[
+                internship.pk,
+            ],
         )
         if overlap_exists:
             return response.validation_error(

@@ -14,7 +14,7 @@
     <section class="internships">
         <div class="page-header">
             <h1>Hi {{ request.user.full_name }}</h1>
-            <p>Browse through your internships below.</p>
+            <p>Browse through your placements below.</p>
         </div>
 
         <div class="internship-list">
@@ -42,9 +42,9 @@
     <section class="add-internship">
         <div class="form-card ">
             <div class="form-header">
-                <h2>Add Internship</h2>
+                <h2>Add Placement</h2>
                 <p>
-                    Kindly fill the form below to add an internship to your profile.
+                    Kindly fill the form below to add an placements to your profile.
                 </p>
             </div>
 
@@ -54,7 +54,7 @@
 
                 <div class="form-fields">
                     <div class="form-field">
-                        <label for="internship_type">Internship Type</label>
+                        <label for="internship_type">Placement Type</label>
                         <select id="internship_type" name="internship_type" class="form-input form-select" required
                             autofocus title="Select the type of internship">
                             {% for internship_type in internship_types %}
@@ -76,14 +76,14 @@
                     </div>
 
                     <div class="form-field">
-                        <label for="start_date">Internship Start Date</label>
+                        <label for="start_date">Start Date</label>
                         <input type="date" id="start_date" name="start_date" class="form-input" required
                             title="What is the date of commencement of your internship?">
                         <small class="field-message"></small>
                     </div>
 
                     <div class="form-field">
-                        <label for="duration">Internship Duration (in days)</label>
+                        <label for="duration">Duration (in days)</label>
                         <input type="number" id="duration" name="duration" class="form-input"
                             placeholder="Duration in days" min="1" required value="30"
                             title="What is the duration of your internship?">
@@ -91,7 +91,7 @@
                     </div>
 
                     <div class="form-field">
-                        <label for="end_date">Internship End Date</label>
+                        <label for="end_date">End Date</label>
                         <input type="date" id="end_date" name="end_date" class="form-input" required
                             title="What is the anticipated date of completion of your internship?">
                         <small class="field-message"></small>

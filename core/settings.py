@@ -3,10 +3,12 @@ from pathlib import Path
 from dotenv import load_dotenv, find_dotenv
 from django.templatetags.static import static
 
-
-load_dotenv(find_dotenv(".env", raise_error_if_not_found=True))
-
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(
+    find_dotenv(BASE_DIR / ".env", raise_error_if_not_found=True), override=True
+)
+
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
@@ -29,17 +31,14 @@ INSTALLED_APPS = [
     "unfold.contrib.guardian",  # optional, if django-guardian package is used
     "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
     "imagekit",
-    
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "phonenumber_field",
     "timezone_field",
-
     "apps.accounts",
     "apps.tokens",
     "apps.interns",
@@ -134,7 +133,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # EMAIL CONFIGS #
 #################
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_HOST = os.getenv("EMAIL_HOST")
 
@@ -187,5 +186,3 @@ HELPERS_SETTINGS = {
         "message": os.getenv("MAINTENANCE_MODE_MESSAGE", "default:minimal_dark"),
     },
 }
-
-

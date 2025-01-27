@@ -65,7 +65,7 @@ class Internship(models.Model):
 
     @property
     def display_label(self) -> str:
-        return f"{InternshipType(self.internship_type).label} Internship in the {Departments(self.department).label}"
+        return f"{InternshipType(self.internship_type).label} @ {Departments(self.department).label}"
     
     @property
     def image(self):

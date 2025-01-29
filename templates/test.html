@@ -1,0 +1,645 @@
+<?php
+session_start();
+error_reporting(0);
+include("../_inc/dbconnect.php");
+   
+if(!isset($_SESSION['uid']))
+		{ 
+			echo "<script>document.ready(window.setTimeout(location.href = '../index.php?log=1',1000));</script>')";
+		}else{
+			$uid=$_SESSION['uid'];		
+			
+			$dt = date("Y-m-d");
+				 
+			$qq = "select * from users where id='$uid'";
+													$run = $con->query($qq);
+													while($row = $run->fetch_assoc())
+													{
+														$id=$row['id'];
+														$fn=$row['fullname'];
+														$idc=$row['idcard'];
+														$em=$row['email'];
+														$bal=$row['balance'];
+														$pw=$row['password'];
+														$country=$row['country'];
+														$phone=$row['phone'];
+														$sym=$row['symbol'];
+														$ref=$row['referrer'];
+														$cr=$row['credit'];
+														$aman=$row['accManager'];
+										$wt=$row['withd'];
+														$tper=$row['tPercent'];
+														$prf=$row['profit'];
+														
+														$gen=$row['gender'];
+														$st=$row['state'];
+														$add1=$row['add1'];
+														$add2=$row['add2'];
+														$stat=$row['status'];
+													}	
+													
+            $sq = "select * from history where userid='$uid' and tstatus='Profit' GROUP BY date ORDER BY COUNT(*) DESC LIMIT 1";
+											$res=mysqli_query($con,$sq);
+                                            $row=mysqli_fetch_array($res);
+                                            $count = mysqli_num_rows($res); 
+                                            		
+                                            if($count > 0) 
+                                            {
+                                                $oc=$row['outcome'];
+                                            }else{
+                                                $oc = "0.00";
+                                            }
+            									
+            $sp = "select * from payments where userid='$uid'";
+											$run = $con->query($sp);
+											$pm = 0;
+													while($row = $run->fetch_assoc())
+													{
+														$am=$row['amount'];
+														$pm = $pm + $am;
+														$stastat = $row['status'];
+														
+                                            }
+		}
+		
+		$getAmtnow = $_GET['deposit'];
+		
+		if(empty($getAmtnow)){
+		    $getAmtnow = 0;
+		}else{
+		    $getAmtnow = $_GET['deposit'];
+		}
+		
+		
+?>
+
+<?php
+if(isset($_POST["Send"])){
+
+  $damt = mysqli_real_escape_string($con, $_POST['amtna']);
+	$dpaymo = mysqli_real_escape_string($con, $_POST['paymo']);
+	$smt = "INSERT INTO `payments`(`userid`, `amount`, `paymode`, `status`, `tr`, `date`, `pp`) VALUES ('$id','$damt','$dpaymo','0','',NOW(),'')";
+	 
+	$run = mysqli_query($con, $smt);
+	if($run){
+	  
+
+require '../PHPMailer/class.phpmailer.php';
+require '../PHPMailer/PHPMailerAutoload.php';
+$mail1 = new PHPMailer;
+$mail1->IsSMTP();
+$mail1->SMTPAuth = true;
+$mail1->Host = 'mail.uprisehorizonhubplc.com';
+$mail1->SMTPSecure = 'ssl';
+$mail1->Port = 465; 
+$mail1->Priority = 1;
+$mail1->Username = 'support@uprisehorizonhubplc.com';
+$mail1->Password = 'h=+;TMX0XtH@1AAA1Pp';
+$mail1->From = 'support@uprisehorizonhubplc.com';
+$mail1->FromName = 'uprisehorizonhubplc';
+$mail1->addAddress("support@uprisehorizonhubplc.com", "Hello Admin");
+$mail1->IsHTML(true);
+$mail1->WordWrap = 50;
+$sub1 = "$fn Just Made A Deposit On Your Broker";	
+$body1="
+<h2>Login Admin To Manage Client Payment</h2> 
+<br>
+Name : $fn
+<br>
+Amount Deposited : $damt
+<br>
+Payment Mode : $dpaymo
+<br>
+Email Address : $em
+";
+$mail1->Subject = $sub1;
+$mail1->Body    = $body1;
+$mail1->isHTML(true);
+if(!$mail1->send()) {
+$msgid1=33;
+}else{
+$msgid1=22;
+}	
+									
+	    
+	
+			$MEsage = " <div class='alert alert-pro alert-primary'>    <div class='alert-text'>        <h6>Your Deposit Request Has Been Initiated Successfully </h6>       
+			<p>Please wait for your coin confirmation before contacting us for additional information at <a href='mailto:support@uprisehorizonhubplc.com'>support@uprisehorizonhubplc.com</a></p>    </div></div>";
+                            		
+	    //echo "<script>window.location.href = 'deposit.php';</script>";
+	}else{
+		echo "<b>Error Initiating Deposit. Please Reload & Try Again</b>";
+	}
+}
+?>
+<?php include("mainnav.php");?>
+
+
+
+
+<div class="nk-content nk-content-fluid">
+    <div class="container-xl wide-lg">
+        <div class="nk-content-body">
+
+            <div class="nk-block-head">
+                <div class="nk-block-head-content">
+                    <h4 class="nk-block-title">Preferred Deposit Amount <em
+                            class="icon ni ni-chevron-right-fill-c"></em>
+                        <?php echo "$sym". number_format($getAmtnow, 2); ?>
+                    </h4>
+                    <div class="nk-block-des">
+                        <p>Please send your payment to one of the below listed crypto-currency addresses.
+                        </p>
+                    </div>
+                </div>
+
+                <?php echo $MEsage; ?>
+
+            </div>
+
+
+            <div class="slider-init"
+                data-slick='{"arrows": false, "dots": true, "slidesToShow": 3, "slidesToScroll": 1, "infinite":true, "responsive":[ {"breakpoint": 992,"settings":{"slidesToShow": 2}}, {"breakpoint": 768,"settings":{"slidesToShow": 1}} ]}'>
+
+
+
+
+                <div class="col">
+                    <div class="card card-bordered">
+                        <div class="card-img-top" style="background-color:#0b1109;height:auto;padding:4px">
+                            <img src='icons/btc.svg'
+                                style='width:100%;border-radius:2px;background-color:white;padding:0px;'>
+                        </div>
+                        <div class="card-inner">
+                            <h5 class="card-title">BITCOIN ADDRESS</h5>
+
+                            <div class="nk-refwg-url">
+                                <div class="form-control-wrap">
+
+
+                                    <div class="form-clip clipboard-init" data-clipboard-target="#refUrlB"
+                                        data-success="Copied" data-text="Copy Link">
+                                        <em class="clipboard-icon icon ni ni-copy"></em>
+                                        <span class="clipboard-text">Copy</span>
+                                    </div>
+
+
+                                    <div class="form-icon"><em class="icon ni ni-link-alt"></em></div>
+                                    <input type="text" class="form-control copy-text" id="refUrlB"
+                                        value="bc1qalcv9ldtyw94hqyjseweth6fu4s3p5fkl74x6f" readonly
+                                        style='margin-bottom:4px'>
+                                </div>
+                            </div>
+
+                            <p class="card-text" style='padding-top:5px'>Full-Display :<br> <span
+                                    style="color:white"></span>bc1qalcv9ldtyw94hqyjseweth6fu4s3p5fkl74x6f</p>
+
+
+                            <form method="POST">
+                                <input type='hidden' class='form-control' name='amtna' readonly
+                                    value='<?php echo $sym. $getAmtnow;?>'>
+                                <input type='text' class='form-control' name='paymo'
+                                    placeholder='Enter Payment Mode - Bitcoin, Usdt...' value="Bitcoin" readonly
+                                    style='margin-bottom:4px'>
+                                <input type='submit' name='Send' class="btn btn-primary"
+                                    value="I have made a payment." />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+                <div class="col">
+                    <div class="card card-bordered">
+                        <div class="card-img-top" style="background-color:#0b1109;height:auto;padding:50px">
+                            <img src='icons/eth.png'
+                                style='width:30%;border-radius:10%;background-color:white;padding:15px;'>
+                        </div>
+                        <div class="card-inner">
+                            <h5 class="card-title">ETHERUEM ADDRESS</h5>
+
+                            <div class="nk-refwg-url">
+                                <div class="form-control-wrap">
+
+
+                                    <div class="form-clip clipboard-init" data-clipboard-target="#refUrlE"
+                                        data-success="Copied" data-text="Copy Link"><em
+                                            class="clipboard-icon icon ni ni-copy"></em> <span
+                                            class="clipboard-text">Copy</span></div>
+
+
+                                    <div class="form-icon"><em class="icon ni ni-link-alt"></em></div>
+                                    <input type="text" class="form-control copy-text" id="refUrlE"
+                                        value="0xF49CC1318112F7986937999a722F6D88f3aEC876" readonly
+                                        style='margin-bottom:4px'>
+
+
+                                </div>
+                            </div>
+
+                            <p class="card-text" style='padding-top:5px'>Full-Display :<br> <span
+                                    style="color:white">0xF49CC1318112F7986937999a722F6D88f3aEC876</span></p>
+
+
+
+
+                            <form method="POST">
+                                <input type='hidden' class='form-control' name='amtna' readonly
+                                    value='<?php echo $sym. $getAmtnow;?>'>
+                                <input type='text' class='form-control' name='paymo'
+                                    placeholder='Enter Payment Mode - Bitcoin, Usdt...' value="Bitcoin" readonly
+                                    style='margin-bottom:4px'>
+                                <input type='submit' name='Send' class="btn btn-primary"
+                                    value="I have made a payment." />
+                            </form>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="col">
+                    <div class="card card-bordered">
+                        <div class="card-img-top" style="background-color:#0b1109;height:auto;padding:50px">
+                            <img src='icons/eth.png'
+                                style='width:30%;border-radius:10%;background-color:white;padding:15px;'>
+                        </div>
+                        <div class="card-inner">
+                            <h5 class="card-title">USDT(ERC20) ADDRESS</h5>
+
+                            <div class="nk-refwg-url">
+                                <div class="form-control-wrap">
+
+
+                                    <div class="form-clip clipboard-init" data-clipboard-target="#refUrlU"
+                                        data-success="Copied" data-text="Copy Link"><em
+                                            class="clipboard-icon icon ni ni-copy"></em> <span
+                                            class="clipboard-text">Copy</span></div>
+
+
+                                    <div class="form-icon"><em class="icon ni ni-link-alt"></em></div>
+                                    <input type="text" class="form-control copy-text" id="refUrlU"
+                                        value="0xF49CC1318112F7986937999a722F6D88f3aEC876" readonly
+                                        style='margin-bottom:4px'>
+
+
+                                </div>
+                            </div>
+
+                            <p class="card-text" style='padding-top:5px'>Full-Display :<br> <span
+                                    style="color:white">0xF49CC1318112F7986937999a722F6D88f3aEC876</span></p>
+
+
+
+
+                            <form method="POST">
+                                <input type='hidden' class='form-control' name='amtna' readonly
+                                    value='<?php echo $sym. $getAmtnow;?>'>
+                                <input type='text' class='form-control' name='paymo'
+                                    placeholder='Enter Payment Mode - Bitcoin, Usdt...' value="Bitcoin" readonly
+                                    style='margin-bottom:4px'>
+                                <input type='submit' name='Send' class="btn btn-primary"
+                                    value="I have made a payment." />
+                            </form>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="col">
+                    <div class="card card-bordered">
+                        <div class="card-img-top" style="background-color:#0b1109;height:auto;padding:50px">
+                            <img src='icons/eth.png'
+                                style='width:30%;border-radius:10%;background-color:white;padding:15px;'>
+                        </div>
+                        <div class="card-inner">
+                            <h5 class="card-title">USDT(TRC20) ADDRESS</h5>
+
+                            <div class="nk-refwg-url">
+                                <div class="form-control-wrap">
+
+
+                                    <div class="form-clip clipboard-init" data-clipboard-target="#refUrlUT"
+                                        data-success="Copied" data-text="Copy Link"><em
+                                            class="clipboard-icon icon ni ni-copy"></em> <span
+                                            class="clipboard-text">Copy</span></div>
+
+
+                                    <div class="form-icon"><em class="icon ni ni-link-alt"></em></div>
+                                    <input type="text" class="form-control copy-text" id="refUrlUT"
+                                        value="TRg5saSk5HxSS1DC62CsRV6MpEgx6Yw9Q2" readonly style='margin-bottom:4px'>
+
+
+                                </div>
+                            </div>
+
+                            <p class="card-text" style='padding-top:5px'>Full-Display :<br> <span
+                                    style="color:white">TRg5saSk5HxSS1DC62CsRV6MpEgx6Yw9Q2</span></p>
+
+
+
+
+                            <form method="POST">
+                                <input type='hidden' class='form-control' name='amtna' readonly
+                                    value='<?php echo $sym. $getAmtnow;?>'>
+                                <input type='text' class='form-control' name='paymo'
+                                    placeholder='Enter Payment Mode - Bitcoin, Usdt...' value="Bitcoin" readonly
+                                    style='margin-bottom:4px'>
+                                <input type='submit' name='Send' class="btn btn-primary"
+                                    value="I have made a payment." />
+                            </form>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="col">
+                    <div class="card card-bordered">
+                        <div class="card-img-top" style="background-color:#0b1109;height:auto;padding:50px">
+                            <img src='icons/eth.png'
+                                style='width:30%;border-radius:10%;background-color:white;padding:15px;'>
+                        </div>
+                        <div class="card-inner">
+                            <h5 class="card-title">SOLANA ADDRESS</h5>
+
+                            <div class="nk-refwg-url">
+                                <div class="form-control-wrap">
+
+
+                                    <div class="form-clip clipboard-init" data-clipboard-target="#refUrlS"
+                                        data-success="Copied" data-text="Copy Link"><em
+                                            class="clipboard-icon icon ni ni-copy"></em> <span
+                                            class="clipboard-text">Copy</span></div>
+
+
+                                    <div class="form-icon"><em class="icon ni ni-link-alt"></em></div>
+                                    <input type="text" class="form-control copy-text" id="refUrlS"
+                                        value="FftqqKzhkfzZ6tP6CPiYdEoMNYi25pDL9Pch2paKumqS" readonly
+                                        style='margin-bottom:4px'>
+
+
+                                </div>
+                            </div>
+
+                            <p class="card-text" style='padding-top:5px'>Full-Display :<br> <span
+                                    style="color:white">FftqqKzhkfzZ6tP6CPiYdEoMNYi25pDL9Pch2paKumqS</span></p>
+
+
+
+
+                            <form method="POST">
+                                <input type='hidden' class='form-control' name='amtna' readonly
+                                    value='<?php echo $sym. $getAmtnow;?>'>
+                                <input type='text' class='form-control' name='paymo'
+                                    placeholder='Enter Payment Mode - Bitcoin, Usdt...' value="Bitcoin" readonly
+                                    style='margin-bottom:4px'>
+                                <input type='submit' name='Send' class="btn btn-primary"
+                                    value="I have made a payment." />
+                            </form>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+                <div class="col">
+                    <div class="card card-bordered">
+                        <div class="card-img-top" style="background-color:#0b1109;height:auto;padding:50px">
+                            <img src='icons/eth.png'
+                                style='width:30%;border-radius:10%;background-color:white;padding:15px;'>
+                        </div>
+                        <div class="card-inner">
+                            <h5 class="card-title">DOGE ADDRESS</h5>
+
+                            <div class="nk-refwg-url">
+                                <div class="form-control-wrap">
+
+
+                                    <div class="form-clip clipboard-init" data-clipboard-target="#refUrlSDD"
+                                        data-success="Copied" data-text="Copy Link"><em
+                                            class="clipboard-icon icon ni ni-copy"></em> <span
+                                            class="clipboard-text">Copy</span></div>
+
+
+                                    <div class="form-icon"><em class="icon ni ni-link-alt"></em></div>
+                                    <input type="text" class="form-control copy-text" id="refUrlSDD"
+                                        value="DJe6x7xLSd1q5TxSSFJeMvhcUJ9Lk92qbJ" readonly style='margin-bottom:4px'>
+
+
+                                </div>
+                            </div>
+
+                            <p class="card-text" style='padding-top:5px'>Full-Display :<br> <span
+                                    style="color:white">DJe6x7xLSd1q5TxSSFJeMvhcUJ9Lk92qbJ</span></p>
+
+
+
+
+                            <form method="POST">
+                                <input type='hidden' class='form-control' name='amtna' readonly
+                                    value='<?php echo $sym. $getAmtnow;?>'>
+                                <input type='text' class='form-control' name='paymo'
+                                    placeholder='Enter Payment Mode - Bitcoin, Usdt...' value="Bitcoin" readonly
+                                    style='margin-bottom:4px'>
+                                <input type='submit' name='Send' class="btn btn-primary"
+                                    value="I have made a payment." />
+                            </form>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+                <div class="col">
+                    <div class="card card-bordered">
+                        <div class="card-img-top" style="background-color:#0b1109;height:auto;padding:50px">
+                            <img src='icons/eth.png'
+                                style='width:30%;border-radius:10%;background-color:white;padding:15px;'>
+                        </div>
+                        <div class="card-inner">
+                            <h5 class="card-title">XRP ADDRESS</h5>
+
+                            <div class="nk-refwg-url">
+                                <div class="form-control-wrap">
+
+
+                                    <div class="form-clip clipboard-init" data-clipboard-target="#refUrlXX"
+                                        data-success="Copied" data-text="Copy Link"><em
+                                            class="clipboard-icon icon ni ni-copy"></em> <span
+                                            class="clipboard-text">Copy</span></div>
+
+
+                                    <div class="form-icon"><em class="icon ni ni-link-alt"></em></div>
+                                    <input type="text" class="form-control copy-text" id="refUrlXX"
+                                        value="rUvjeSznd7KpQzr5vB2mauFgWnp6b6xUfF" readonly style='margin-bottom:4px'>
+
+
+                                </div>
+                            </div>
+
+                            <p class="card-text" style='padding-top:5px'>Full-Display :<br> <span
+                                    style="color:white">rUvjeSznd7KpQzr5vB2mauFgWnp6b6xUfF</span></p>
+
+
+
+
+                            <form method="POST">
+                                <input type='hidden' class='form-control' name='amtna' readonly
+                                    value='<?php echo $sym. $getAmtnow;?>'>
+                                <input type='text' class='form-control' name='paymo'
+                                    placeholder='Enter Payment Mode - Bitcoin, Usdt...' value="Bitcoin" readonly
+                                    style='margin-bottom:4px'>
+                                <input type='submit' name='Send' class="btn btn-primary"
+                                    value="I have made a payment." />
+                            </form>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+</div>
+<div class="nk-footer">
+    <div class="container-fluid">
+        <div class="nk-footer-wrap">
+            <div class="nk-footer-copyright"> © 2024 uprisehorizonhubplc.com</div>
+            <div class="nk-footer-links">
+                <ul class="nav nav-sm">
+
+                    <li class="nav-item">
+
+                        <div id="google_translate_element"></div>
+
+                        <script type="text/javascript">
+                            function googleTranslateElementInit() {
+                                new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+                            }
+                        </script>
+
+                        <script type="text/javascript"
+                            src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+
+<script src="js/bundle.js"></script>
+<script src="js/scripts.js"></script>
+<script src="js/demo-settings.js"></script>
+<script src="js/chart-crypto.js"></script>
+
+
+
+
+
+<script src="js/demo-settings.js?ver=3.1.2"></script>
+<script src="js/libs/jstree.js?ver=3.1.2"></script>
+<script src="js/example-tree.js?ver=3.1.2"></script>
+</body>
+
+</html>

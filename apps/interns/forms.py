@@ -11,7 +11,6 @@ class InternshipForm(forms.ModelForm):
             "department",
             "start_date",
             "end_date",
-            "duration",
         ]
 
         widgets = {

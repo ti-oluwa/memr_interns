@@ -15,13 +15,8 @@ internshipAddForm.onsubmit = (e) => {
     for (const [key, value] of formData.entries()) {
         data[key] = value;
     }
-    let duration = data.duration ?? null;
-    if (duration){
-        data['duration'] = data['duration'] + ' ' + 'days';
-    }
 
     internshipAddButton.onPost();
-
     const options = {
         method: 'POST',
         headers: {

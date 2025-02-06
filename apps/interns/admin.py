@@ -122,16 +122,14 @@ class InternshipModelAdmin(UnfoldModelAdmin):
         "in_session",
         "department",
         "age",
-        "duration",
         "start_date",
         "end_date",
-        "expected_end_date",
+        "duration",
     ]
     list_display_links = ["__str__"]
     list_editable = [
         "internship_type",
         "department",
-        "duration",
         "start_date",
         "end_date",
     ]
@@ -141,7 +139,6 @@ class InternshipModelAdmin(UnfoldModelAdmin):
         InSessionFilter,
         ("start_date", DateFieldListFilter),
         ("end_date", DateFieldListFilter),
-        ("duration", DateFieldListFilter),
     ]
     search_fields = [
         "account__first_name",
@@ -172,7 +169,7 @@ class InternshipModelAdmin(UnfoldModelAdmin):
     readonly_fields = []
 
     def get_queryset(self, request):
-        # Returns annotated queryset with `expected_end_date` and `ongoing` fields
+        # Returns annotated queryset with `ongoing` fields
         return super().get_queryset(request).select_related("account").with_ongoing()
 
     def has_module_permission(self, request):
@@ -196,14 +193,7 @@ class InternshipModelAdmin(UnfoldModelAdmin):
     image_preview = AdminThumbnail(image_field=cached_admin_thumb)
     image_preview = unfold_display(description=_("Intern Image"))(image_preview)
 
-    @unfold_display(
-        description=_("Expected End Date"),
-        ordering="expected_end_date",
-        empty_value="Unknown",
-    )
-    def expected_end_date(self, obj: Internship):
-        return obj.expected_end_date
-
+    
     @unfold_display(boolean=True, description="In Session", ordering="ongoing")
     def in_session(self, obj: Internship) -> bool:
         return obj.check_ongoing()

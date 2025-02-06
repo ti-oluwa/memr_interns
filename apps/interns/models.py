@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from uuid_extensions import uuid7
+from django.core.exceptions import ValidationError
 
 from .managers import InternshipManager
 
@@ -50,8 +51,9 @@ class Internship(models.Model):
         max_length=120, db_index=True, choices=Departments.choices
     )
     start_date = models.DateField(db_index=True, blank=False, null=False)
-    end_date = models.DateField(db_index=True, blank=True, null=True)
-    duration = models.DurationField(db_index=True, blank=False, null=False)
+    end_date = models.DateField(
+        db_index=True, blank=False, null=False, default=timezone.now
+    )
 
     objects = InternshipManager()
 
@@ -66,16 +68,14 @@ class Internship(models.Model):
     @property
     def display_label(self) -> str:
         return f"{InternshipType(self.internship_type).label} @ {Departments(self.department).label}"
-    
+
     @property
     def image(self):
         return self.account.image
 
-    def get_expected_end_date(self) -> datetime.date:
-        """Returns the expected end date of an internship"""
-        if hasattr(self, "expected_end_date"):
-            return self.expected_end_date
-        return self.start_date + self.duration
+    @property
+    def duration(self):
+        return (self.end_date - self.start_date) or datetime.timedelta(days=1)
 
     def check_ongoing(self) -> bool:
         """
@@ -88,17 +88,14 @@ class Internship(models.Model):
             return self.ongoing
 
         today = timezone.now().date()
-        if self.end_date:
-            return self.end_date > today
-
-        return self.get_expected_end_date() > today
+        return self.end_date >= today
 
     def end_internship(self) -> None:
         """End internship"""
         self.end_date = timezone.now().date()
         self.save(update_fields=["end_date"])
 
-    def extend_internship(self, duration: datetime.timedelta) -> None:
-        """Extend internship"""
-        self.duration += duration
-        self.save(update_fields=["duration"])
+    def save(self, *args, **kwargs):
+        if self.end_date < self.start_date:
+            raise ValidationError("End date must be greater than start date.")
+        super().save(*args, **kwargs)

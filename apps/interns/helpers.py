@@ -82,17 +82,14 @@ def check_internship_overlap(
     """Check if an internship overlaps with another internship."""
     queries = [
         models.Q(account=account),
-        models.Q(end_date__gte=start_date)
-        | models.Q(expected_end_date__gte=start_date),
+        models.Q(end_date__gte=start_date),
     ]
     if end_date:
         queries.append(models.Q(start_date__lte=end_date))
     if exclude_pks:
         queries.append(~models.Q(pk__in=exclude_pks))
 
-    internship_period_overlap = (
-        Internship.objects.with_expected_end_date()
-        .select_related("account")
-        .filter(*queries)
+    internship_period_overlap = Internship.objects.select_related("account").filter(
+        *queries
     )
     return internship_period_overlap.exists()

@@ -23,7 +23,6 @@ def _queryset_to_rows(qs: models.QuerySet[Internship]):
         "Intern Age",
         "Internship Start Date",
         "Internship Duration",
-        "Internship Expected End Date",
         "Internship End Date",
         "In Session",
     )
@@ -39,7 +38,6 @@ def _queryset_to_rows(qs: models.QuerySet[Internship]):
             intern.account.age,
             intern.start_date,
             display_timedelta(intern.duration),
-            intern.get_expected_end_date(),
             intern.end_date,
             "YES" if intern.check_ongoing() else "NO",
         )

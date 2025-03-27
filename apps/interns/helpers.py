@@ -27,7 +27,7 @@ def _queryset_to_rows(qs: models.QuerySet[Internship]):
         "In Session",
     )
 
-    for intern in qs:
+    for intern in qs.iterator(chunk_size=100):
         yield (
             intern.account.full_name,
             intern.account.email,
